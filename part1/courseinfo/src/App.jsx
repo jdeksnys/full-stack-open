@@ -47,14 +47,13 @@ export function Header({course}) {
 
 
 export function Content({ courseObj }) {
-  let listItems = [];
-
-  for (let p in courseObj.parts) {
-    let part = courseObj.parts[p];
-    listItems.push(<p key={p}>{part.name} {part.exCount}</p>);
-  }
-
-  return (<div>{listItems}</div>);
+  return (
+    <div>
+      <Part partObj={courseObj.parts.part1}/>
+      <Part partObj={courseObj.parts.part2}/>
+      <Part partObj={courseObj.parts.part3}/>
+    </div>
+  )
 }
 
 
@@ -67,4 +66,12 @@ export function Total({courseObj}) {
   }
 
   return(<p>Number of exercises {tot}</p>);
+}
+
+
+
+export function Part({partObj}) {
+  return (
+    <p>{partObj.name} {partObj.exCount}</p>
+  );
 }
