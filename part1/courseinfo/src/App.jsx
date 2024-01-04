@@ -1,32 +1,30 @@
 const App = () => {
   const course = 'Half Stack application development'
-  const part1 = {
-    name: 'Fundamentals of React',
-    exercises: 10
-  }
-  const part2 = {
-    name: 'Using props to pass data',
-    exercises: 7
-  }
-  const part3 = {
-    name: 'State of a component',
-    exercises: 14
-  }
+  const parts = [
+    {
+      name: 'Fundamentals of React',
+      exercises: 10
+    },
+    {
+      name: 'Using props to pass data',
+      exercises: 7
+    },
+    {
+      name: 'State of a component',
+      exercises: 14
+    }
+  ]
 
   const courseObj = {
     name: course,
-    parts: {
-      part1: part1,
-      part2: part2,
-      part3: part3,
-    },
+    parts: parts,
   };
 
   return (
     <div>
       <Header course={courseObj.name} />
-      <Content courseObj={courseObj}/>
-      <Total courseObj={courseObj}/>
+      <Content parts={courseObj.parts}/>
+      <Total parts={courseObj.parts}/>
     </div>
   )
 }
@@ -43,23 +41,23 @@ export function Header({course}) {
 
 
 
-export function Content({ courseObj }) {
+export function Content({ parts }) {
   return (
     <div>
-      <Part partObj={courseObj.parts.part1}/>
-      <Part partObj={courseObj.parts.part2}/>
-      <Part partObj={courseObj.parts.part3}/>
+      <Part part={parts[0]}/>
+      <Part part={parts[1]}/>
+      <Part part={parts[2]}/>
     </div>
   )
 }
 
 
 
-export function Total({courseObj}) {
+export function Total({parts}) {
   let tot = 0;
   
-  for(let p in courseObj.parts){
-    tot += courseObj.parts[p].exercises;
+  for(let p in parts){
+    tot += parts[p].exercises;
   }
 
   return(<p>Number of exercises {tot}</p>);
@@ -67,8 +65,8 @@ export function Total({courseObj}) {
 
 
 
-export function Part({partObj}) {
+export function Part({part}) {
   return (
-    <p>{partObj.name} {partObj.exercises}</p>
+    <p>{part.name} {part.exercises}</p>
   );
 }
