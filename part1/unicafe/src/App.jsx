@@ -10,58 +10,38 @@ const Button = (props) => {
   );
 }
 
-const GetStats = (props) => {
-  const getAvg = () => (props.good * 1 + props.bad * (-1)) / (props.good + props.bad + props.neutral)
-  const getPositive = () => props.good / (props.good + props.bad + props.neutral)
-
-  return (
-    <div>
-      <p>Average {() => getAvg()}</p>
-      <p>Positive {() => getPositive()}</p>
-    </div>
-  );
-}
-
-
-const App = () => {
-  const [good, setGood] = useState(0)
-  const [neutral, setNeutral] = useState(0)
-  const [bad, setBad] = useState(0)
-  const [all, setAll] = useState(0)
-  const [avg, setAvg] = useState(0)
-  const [positive, setPositive] = useState(0)
-
-  const updateGood = () => {
-    const newGood = good + 1
-    const newAll = (newGood + neutral + bad)
-    const newAvg = (newGood - bad) / newAll
+const Statistics = (props) => {
+  function updateGood() {
+    const newGood = props.good + 1
+    const newAll = (newGood + props.neutral + props.bad)
+    const newAvg = (newGood - props.bad) / newAll
     const newPositive = newGood / newAll * 100
-    setAll(newAll)
-    setGood(newGood)
-    setAvg(newAvg)
-    setPositive(newPositive)
+    props.setGood(newGood)
+    props.setAll(newAll)
+    props.setAvg(newAvg)
+    props.setPositive(newPositive)
   }
 
-  const updateBad = () => {
-    const newBad = bad + 1
-    const newAll = (good + neutral + newBad)
-    const newAvg = (good - newBad) / newAll
-    const newPositive = good / newAll * 100
-    setAll(newAll)
-    setBad(newBad)
-    setAvg(newAvg)
-    setPositive(newPositive)
+  function updateBad() {
+    const newBad = props.bad + 1
+    const newAll = (props.good + props.neutral + newBad)
+    const newAvg = (props.good - newBad) / newAll
+    const newPositive = props.good / newAll * 100
+    props.setBad(newBad)
+    props.setAll(newAll)
+    props.setAvg(newAvg)
+    props.setPositive(newPositive)
   }
 
-  const updateNeutral = () => {
-    const newNeutral = neutral + 1
-    const newAll = (good + newNeutral + bad)
-    const newAvg = (good - bad) / newAll
-    const newPositive = good / newAll * 100
-    setNeutral(newNeutral)
-    setAll(newAll)
-    setAvg(newAvg)
-    setPositive(newPositive)
+  function updateNeutral() {
+    const newNeutral = props.neutral + 1
+    const newAll = (props.good + newNeutral + props.bad)
+    const newAvg = (props.good - props.bad) / newAll
+    const newPositive = props.good / newAll * 100
+    props.setNeutral(newNeutral)
+    props.setAll(newAll)
+    props.setAvg(newAvg)
+    props.setPositive(newPositive)
   }
 
   return (
@@ -75,15 +55,43 @@ const App = () => {
       
       <div>
         <h1>Statistics</h1>
-        <p>Good {good}</p>
-        <p>Neutral {neutral}</p>
-        <p>Bad {bad}</p>
-        <p>All {all}</p>
-        <p>Average {avg}</p>
-        <p>Positive {positive}%</p>
+        <p>Good {props.good}</p>
+        <p>Neutral {props.neutral}</p>
+        <p>Bad {props.bad}</p>
+        <p>All {props.all}</p>
+        <p>Average {props.avg}</p>
+        <p>Positive {props.positive}%</p>
       </div>
       
     </div>
+  )
+}
+
+
+const App = () => {
+  const [good, setGood] = useState(0)
+  const [neutral, setNeutral] = useState(0)
+  const [bad, setBad] = useState(0)
+  const [all, setAll] = useState(0)
+  const [avg, setAvg] = useState(0)
+  const [positive, setPositive] = useState(0)
+
+
+  return (
+    <Statistics
+      good={good}
+      bad={bad}
+      neutral={neutral}
+      all={all}
+      avg={avg}
+      positive={positive}
+      setGood={setGood}
+      setBad={setBad}
+      setNeutral={setNeutral}
+      setAll={setAll}
+      setAvg={setAvg}
+      setPositive={setPositive}
+    />
   )
 }
 
