@@ -6,23 +6,28 @@ const Button = (props) => {
   )
 }
 
-function updateSelected(anecdotes, setSelected) {
-  const handler = () => {
-    let random = Math.floor(Math.random() * anecdotes.length);
-    setSelected(random)
-  }
-  return handler
+const PopularAnedote = (props) => {
+  let max = Math.max(...Object.values(props.anecdotePts))
+  let i = Object.values(props.anecdotePts).indexOf(max)
+  return (
+    <div>
+      <h1>Anecdote with most votes</h1>
+      <p>{props.anecdotes[i]}</p>
+      <p>Has {max} vote(s)</p>
+    </div>
+  )
 }
 
-function updatePts(selected, anecdotePts, setAnecdotePts) {
-  const handler = () => {
-    const ptsCopy = {...anecdotePts}
-    ptsCopy[selected] += 1
-    setAnecdotePts(ptsCopy)
-  }
-  return handler
+const updateSelected = (anecdotes, setSelected) => () => {
+  let random = Math.floor(Math.random() * anecdotes.length);
+  setSelected(random)
 }
 
+const updatePts = (selected, anecdotePts, setAnecdotePts) => () => {
+  const ptsCopy = {...anecdotePts}
+  ptsCopy[selected] += 1
+  setAnecdotePts(ptsCopy)
+}
 
 
 const App = () => {
@@ -36,7 +41,6 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
-
   function createPtsObject() {
     let resultObject = {};
     for (let i = 0; i < anecdotes.length; i++) {
@@ -44,8 +48,8 @@ const App = () => {
     }
     return resultObject;
   }
+
   let ptsObject = createPtsObject()
-   
   const [selected, setSelected] = useState(0)
   const [anecdotePts, setAnecodePts] = useState(ptsObject)
 
@@ -59,6 +63,7 @@ const App = () => {
       </div>
       <Button onClick={updatePts(selected, anecdotePts, setAnecodePts)} text='vote'/>
       <Button onClick={updateSelected(anecdotes, setSelected)} text='next anecdote'/>
+      <PopularAnedote anecdotes={anecdotes} anecdotePts={anecdotePts} />
     </div>
   )
 }
