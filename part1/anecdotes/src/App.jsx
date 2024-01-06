@@ -6,10 +6,24 @@ const Button = (props) => {
   )
 }
 
-function updateSelected(anecdotes, callback) {
-  let random = Math.floor(Math.random() * anecdotes.length);
-  callback(random)
+function updateSelected(anecdotes, setSelected) {
+  const handler = () => {
+    let random = Math.floor(Math.random() * anecdotes.length);
+    setSelected(random)
+  }
+  return handler
 }
+
+function updatePts(selected, anecdotePts, setAnecdotePts) {
+  const handler = () => {
+    const ptsCopy = {...anecdotePts}
+    ptsCopy[selected] += 1
+    setAnecdotePts(ptsCopy)
+  }
+  return handler
+}
+
+
 
 const App = () => {
   const anecdotes = [
@@ -22,15 +36,29 @@ const App = () => {
     'Programming without an extremely heavy use of console.log is same as if a doctor would refuse to use x-rays or blood tests when diagnosing patients.',
     'The only way to go fast, is to go well.'
   ]
+
+  function createPtsObject() {
+    let resultObject = {};
+    for (let i = 0; i < anecdotes.length; i++) {
+        resultObject[i] = 0;
+    }
+    return resultObject;
+  }
+  let ptsObject = createPtsObject()
    
   const [selected, setSelected] = useState(0)
+  const [anecdotePts, setAnecodePts] = useState(ptsObject)
 
   return (
     <div>
       <div>
         {anecdotes[selected]}
       </div>
-      <Button onClick={() => updateSelected(anecdotes, setSelected)} text='next anecdote'/>
+      <div>
+        Has {anecdotePts[selected]} points
+      </div>
+      <Button onClick={updatePts(selected, anecdotePts, setAnecodePts)} text='vote'/>
+      <Button onClick={updateSelected(anecdotes, setSelected)} text='next anecdote'/>
     </div>
   )
 }
