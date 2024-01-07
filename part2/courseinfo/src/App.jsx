@@ -1,24 +1,5 @@
 import { useState } from 'react'
-
-
-const Course = ({course}) => {
-  return (
-    <div>
-      <h2>{course.name}</h2>
-      <ul>
-        {course.parts.map(part => 
-          <li key={part.id}>{part.name} {part.exercises}</li>
-        )}
-      </ul>
-      <Statistics course={course} />
-    </div>
-  )
-}
-
-const Statistics = ({course}) => {
-  let total = course.parts.reduce((sum, part) => sum + part.exercises, 0)
-  return (<div><b>total of {total} exercises</b></div>)
-}
+import Course from './components/Course.jsx'
 
 const App = () => {
   const courses = [
@@ -68,7 +49,7 @@ const App = () => {
 
   return (
     <div>
-      <h1>Web developmnet curriculum</h1>
+      <h1>Web development curriculum</h1>
       <ul>
         {courses.map(function(course) {
           return (
