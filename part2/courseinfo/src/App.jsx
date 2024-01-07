@@ -6,12 +6,17 @@ const Course = ({course}) => {
     <div>
       <h1>Half Stack Application Development</h1>
       <ul>
-        {course.parts.map((part) => {
-          return <li key={part.id}>{part.name} {part.exercises}</li>
-        })}
+        {course.parts.map((part) => 
+          <li key={part.id}>{part.name} {part.exercises}</li>
+        )}
       </ul>
     </div>
   )
+}
+
+const Statistics = ({course}) => {
+  let total = course.parts.reduce((sum, part) => sum + part.exercises, 0)
+  return (<div><b>total of {total} exercises</b></div>)
 }
 
 const App = () => {
@@ -37,7 +42,12 @@ const App = () => {
     ]
   }
 
-  return <Course course={course} />
+  return (
+    <div>
+      <Course course={course} />
+      <Statistics course={course} />
+    </div>
+  )
 }
 
 export default App
