@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 
 
 
@@ -51,7 +51,7 @@ const RenderSingle = (props) => <li>{props.person.name} {props.person.number}</l
 
 const App = () => {
   const [persons, setPersons] = useState([
-    { name: 'Arto Hellas', number: 123 }
+    // { name: 'Arto Hellas', number: 123 }
   ]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
@@ -70,6 +70,22 @@ const App = () => {
       setNewNumber('')
     }
   }
+
+  const hook = () => {
+    let url = 'http://localhost:3001/persons'
+    fetch(url).then(respose => {
+      if(respose.ok){
+        return respose.json();
+      } else {
+        throw new Error(`FAIL error: ${respose.status}`);
+      }
+    }).then(data => {
+      setPersons(data)
+    }).catch(error => {
+      console.log(error);
+    })
+  }
+  useEffect(hook, []);
 
   return (
     <div>
