@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import personService from './services/personService.js';
+import '../index.css'
 
 
 const Filter = (props) => {
@@ -55,12 +56,30 @@ const RenderSingle = (props) => {
   )
 }
 
+const Notification = (props) => {
+  if (props.message === null) {
+    return null
+  }
+  console.log(props)
+  return (
+    <div className={props.type == 'ok'
+      ? 'ok notification'
+      : props.type == 'error'
+        ? 'error notification'
+        : null}>
+      {props.message}
+    </div>
+  )
+}
+
 
 const App = () => {
   const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
+  const [notifMessage, setNotifMessage] = useState(null)
+  const [notifType, setNotifType] = useState(null)
 
   const handleFilter = (e) => setFilterName(e.target.value);
   const handleNewName = (e) => setNewName(e.target.value);
@@ -73,6 +92,9 @@ const App = () => {
         const updatedPerson = {...oldPerson, number: newNumber}
         personService.update(updatedPerson.id, updatedPerson).then(respose => {
           setPersons(persons.map(p => p.id != updatedPerson.id ? p : updatedPerson))
+          updateNotification(`update phone no. for ${updatedPerson.name}`, 'ok')
+        }).catch(err => {
+          updateNotification(`Information of ${updatedPerson.name} has already been removed from server`, 'error', 5000)
         })
       }
     } else {
@@ -80,8 +102,15 @@ const App = () => {
         setPersons(persons.concat(response))
         setNewName('')
         setNewNumber('')
+        updateNotification(`${newName} added`, 'ok')
       })
     }
+  }
+
+  function updateNotification(message, type, timeout=2000){
+    setNotifMessage(message)
+    setNotifType(type)
+    setTimeout(() => {setNotifMessage(null)}, timeout)
   }
 
   const getAllHook = () => {
@@ -103,6 +132,7 @@ const App = () => {
   return (
     <div>
       <h2>Phonebook</h2>
+      <Notification message={notifMessage} type={notifType}/>
       <Filter filterName={filterName} handler={handleFilter}/>
       <AddNewPersonForm
         newName={newName}
