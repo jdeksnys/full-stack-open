@@ -6,6 +6,12 @@ import axios from 'axios'
 const RenderAll = (props) => {
   const filterFunc = (country) => country.name.common.toLowerCase().includes(props.search.toLocaleLowerCase())
   const resultList = props.allCountries.filter(filterFunc)
+  
+  const [clickedCountry, setClickedCountry] = useState(null)
+  const handleClick = (country) => {
+    console.log('clicked', country)
+    setClickedCountry(country)
+  }
 
   if(resultList.length === 0){
     return <p>no results</p>
@@ -17,8 +23,18 @@ const RenderAll = (props) => {
     return (
       <div>
         <ul>
-          {resultList.map(rec => <li key={rec.name.common}>{rec.name.common}</li>)}
+          {resultList.map(rec => {
+            return (
+              <li key={rec.name.common}>
+                {rec.name.common}
+                <button onClick={() => handleClick(rec)}>
+                  show
+                </button>
+              </li>
+            )
+          })}
         </ul>
+        {clickedCountry && <RenderSingle country={clickedCountry} />}
       </div>
     );
   }
