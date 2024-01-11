@@ -50,7 +50,7 @@ const RenderSingle = (props) => {
   return (
     <li>
       {props.person.name} {props.person.number}
-      <button onClick={() => props.deleteHook(props.person.id)}>delete</button>
+      <button onClick={() => props.deleteHook(props.person)}>delete</button>
     </li>
   )
 }
@@ -68,7 +68,13 @@ const App = () => {
   const handlePersons = (e) => {
     e.preventDefault();
     if(persons.map(rec => rec.name).includes(newName)){
-      alert(`${newName} is already added to phonebook`);
+      if(window.confirm(`${newName} is already added to phonebook. Update phone number with new one?`)){
+        const oldPerson = persons.find(rec => rec.name == newName)
+        const updatedPerson = {...oldPerson, number: newNumber}
+        personService.update(updatedPerson.id, updatedPerson).then(respose => {
+          setPersons(persons.map(p => p.id != updatedPerson.id ? p : updatedPerson))
+        })
+      }
     } else {
       personService.create({name: newName, number: newNumber}).then(response => {
         setPersons(persons.concat(response))
@@ -86,10 +92,10 @@ const App = () => {
   }
   useEffect(getAllHook, [])
 
-  const deleteHook = (id) => {
-    if (window.confirm(`Delete id=${id}?`)) {
-      personService.deleteById(id).then(response => {
-        setPersons(persons.filter(rec => rec.id !== id))
+  const deleteHook = (pers) => {
+    if (window.confirm(`Delete ${pers.name}?`)) {
+      personService.deleteById(pers.id).then(response => {
+        setPersons(persons.filter(rec => rec.id !== pers.id))
       })
     }
   }
