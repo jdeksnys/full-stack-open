@@ -39,14 +39,21 @@ const RenderAll = (props) => {
     <div>
       <h2>Numbers</h2>
       <ul>
-        {props.persons.filter(filterNames).map(rec => <RenderSingle key={rec.name} person={rec}/>)}
+        {props.persons.filter(filterNames).map(rec => <RenderSingle key={rec.id} person={rec} deleteHook={props.deleteHook}/>)}
       </ul>
     </div>
   );
 }
 
 
-const RenderSingle = (props) => <li>{props.person.name} {props.person.number}</li>
+const RenderSingle = (props) => {
+  return (
+    <li>
+      {props.person.name} {props.person.number}
+      <button onClick={() => props.deleteHook(props.person.id)}>delete</button>
+    </li>
+  )
+}
 
 
 const App = () => {
@@ -79,6 +86,14 @@ const App = () => {
   }
   useEffect(getAllHook, [])
 
+  const deleteHook = (id) => {
+    if (window.confirm(`Delete id=${id}?`)) {
+      personService.deleteById(id).then(response => {
+        setPersons(persons.filter(rec => rec.id !== id))
+      })
+    }
+  }
+ 
   return (
     <div>
       <h2>Phonebook</h2>
@@ -90,7 +105,7 @@ const App = () => {
         numberHandler={handleNewNumber}
         personHandler={handlePersons}
       />
-      <RenderAll persons={persons} filterName={filterName}/>
+      <RenderAll persons={persons} filterName={filterName} deleteHook={deleteHook}/>
     </div>
   )
 }
