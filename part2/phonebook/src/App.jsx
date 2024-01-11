@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react'
-
+import personService from './services/personService.js';
 
 
 const Filter = (props) => {
@@ -22,7 +22,7 @@ const AddNewPersonForm = (props) => {
             <input value={props.newName} onChange={props.nameHandler} type='text'/>
           </div>
           <div>
-            number (Int):
+            number:
             <input type='text' value={props.newNumber} onChange={props.numberHandler} />
           </div>
           <div>
@@ -50,9 +50,7 @@ const RenderSingle = (props) => <li>{props.person.name} {props.person.number}</l
 
 
 const App = () => {
-  const [persons, setPersons] = useState([
-    // { name: 'Arto Hellas', number: 123 }
-  ]) 
+  const [persons, setPersons] = useState([]) 
   const [newName, setNewName] = useState('')
   const [newNumber, setNewNumber] = useState('')
   const [filterName, setFilterName] = useState('')
@@ -65,27 +63,21 @@ const App = () => {
     if(persons.map(rec => rec.name).includes(newName)){
       alert(`${newName} is already added to phonebook`);
     } else {
-      setPersons(persons.concat({name: newName, number: parseInt(newNumber)}))
-      setNewName('')
-      setNewNumber('')
+      personService.create({name: newName, number: newNumber}).then(response => {
+        setPersons(persons.concat(response))
+        setNewName('')
+        setNewNumber('')
+      })
     }
   }
 
-  const hook = () => {
-    let url = 'http://localhost:3001/persons'
-    fetch(url).then(respose => {
-      if(respose.ok){
-        return respose.json();
-      } else {
-        throw new Error(`FAIL error: ${respose.status}`);
-      }
-    }).then(data => {
-      setPersons(data)
-    }).catch(error => {
-      console.log(error);
-    })
+  const getAllHook = () => {
+    personService.getAll()
+      .then(response => {
+        setPersons(response)
+      })
   }
-  useEffect(hook, []);
+  useEffect(getAllHook, [])
 
   return (
     <div>
