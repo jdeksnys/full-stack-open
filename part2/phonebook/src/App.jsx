@@ -90,8 +90,9 @@ const App = () => {
       if(window.confirm(`${newName} is already added to phonebook. Update phone number with new one?`)){
         const oldPerson = persons.find(rec => rec.name == newName)
         const updatedPerson = {...oldPerson, number: newNumber}
-        personService.update(updatedPerson.id, updatedPerson).then(respose => {
-          setPersons(persons.map(p => p.id != updatedPerson.id ? p : updatedPerson))
+        personService.update(updatedPerson.id, updatedPerson).then(response => {
+          console.log("response", response)
+          getAllHook()
           updateNotification(`update phone no. for ${updatedPerson.name}`, 'ok')
         }).catch(err => {
           updateNotification(`Information of ${updatedPerson.name} has already been removed from server`, 'error', 5000)
@@ -99,7 +100,8 @@ const App = () => {
       }
     } else {
       personService.create({name: newName, number: newNumber}).then(response => {
-        setPersons(persons.concat(response))
+        console.log("response", response)
+        getAllHook()
         setNewName('')
         setNewNumber('')
         updateNotification(`${newName} added`, 'ok')
@@ -124,7 +126,7 @@ const App = () => {
   const deleteHook = (pers) => {
     if (window.confirm(`Delete ${pers.name}?`)) {
       personService.deleteById(pers.id).then(response => {
-        setPersons(persons.filter(rec => rec.id !== pers.id))
+        getAllHook()
       })
     }
   }
